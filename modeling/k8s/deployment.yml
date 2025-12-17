@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modeling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: modeling
+  template:
+    metadata:
+      labels:
+        app: modeling
+    spec:
+      containers:
+        - name: modeling
+          image: docker.io/solon23/modeling:dev
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: modeling-configmap
+          env:
+            - name: MINIO_ENDPOINT
+              value: "http://minio:9090"
+
+            - name: MINIO_ACCESS_KEY
+              value: "minio"
+            - name: MINIO_SECRET_KEY
+              value: "ijuvPN7Ce3oYpDF"
+            - name: MINIO_BUCKET
+              value: "dt-models"
+
+            - name: INFLUX_URL
+              value: "http://influx:8086"
+            - name: INFLUX_ORG
+              value: "wise2025"
+            - name: INFLUX_BUCKET
+              value: "activities"
+            - name: INFLUX_TOKEN
+              value: "9DEXUAV1TGt6QjxmNXpoZl-icGVsVl-TTyOGiPvnfMDKTzFfNfe3BEiDLkTnFDg_YIHzXFlttIAwY6VhI6I_RQ=="
+
+            - name: MODEL_ROOM
+              value: "Bedroom"
