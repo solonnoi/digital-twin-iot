@@ -71,6 +71,7 @@ def get_influx_client():
     org = os.environ["INFLUX_ORG"]
     return InfluxDBClient(url=url, token=token, org=org)
 
+# TODO Make this more complex and well actually useful
 async def create_model_from_influx():
     """
     simple model:
@@ -159,4 +160,5 @@ app.deploy(create_model_from_influx, "create_model_from_influx", "CreateModelEve
 evt = ModelEventFabric()
 
 # tgr = PeriodicTrigger(evt, runImmediate=True)
+# This is the "CreateOccupancyModelFunction"
 tgr2 = PeriodicTrigger(evt, runImmediate=True, cronSpec="*/30 * * * *")

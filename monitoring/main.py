@@ -41,8 +41,16 @@ async def class_test_handler():
 app.deploy(class_test_handler, "class-test-handler-monitoring", "ClassTestEvent")
 
 
-evt = ExampleEventFabric()
-tgr = PeriodicTrigger(evt, runImmediate=True)
+@app.on_event("startup")
+def _start_triggers():
+    start_periodic_model_trigger(interval_minutes=30, run_immediate=True)
 
 
 
+# evt = ExampleEventFabric()
+# tgr = PeriodicTrigger(evt, runImmediate=True)
+
+# This should trigger every 30 minutes and sends an event to create the occupancy model
+# To the modeling component...
+evt2 =_start_triggers()
+tgr2 = PeriodicTrigger(evt2, runImmediate=True, cronSpec="*/30 * * * *")
