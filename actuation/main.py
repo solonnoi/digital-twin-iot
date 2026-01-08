@@ -17,7 +17,16 @@ async def class_test_handler():
     logger.info("I passed the assignment.")
     return {"status": 200, "message": "I passed the assignment."}
 
-app.deploy(class_test_handler, "class-test-handler_actuation", "ClassTestEvent")
 
-evt = ExampleEventFabric()
-trg = PeriodicTrigger(evt, runImmediate=True, cronSpec="*/15 * * * *")
+async def emergency_notification_function():
+    """
+    Sends an email if there is an emergency
+    """
+    logger.info("This is an email")
+    
+    # Logic to send an "email"
+    return {"status": 200, "message": "I passed the assignment."}
+
+
+app.deploy(emergency_notification_function, "emergency_notification_function()", "EmergencyEvent")
+

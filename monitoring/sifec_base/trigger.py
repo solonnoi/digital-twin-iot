@@ -2,13 +2,7 @@
 from abc import ABC
 from datetime import timedelta, datetime, tzinfo
 from threading import Thread
-
 import time
-import durationpy
-import os
-import threading
-import requests
-from gateway import logger as base_logger
 
 
 from apscheduler.triggers.cron import CronTrigger
@@ -17,34 +11,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from .event import BaseEventFabric
 
 
-class _L:
-        @staticmethod
-        def info(*a, **k): print(*a)
-        @staticmethod
-        def warning(*a, **k): print(*a)
-        
-base_logger = _L()
-
-def _post_create_model_event(payload=None, sch_env="SCH_SERVICE_NAME", timeout=5):
-    sch = os.environ.get(sch_env, "http://scheduler:8000")
-    url = sch.rstrip("/") + "/api/event"
-    body = {"name": "CreateModelEvent", "data": payload or {"source": "monitoring"}}
-    try:
-        requests.post(url, json=body, timeout=timeout)
-        base_logger.info("Posted CreateModelEvent to scheduler: %s", url)
-    except Exception as e:
-        base_logger.warning("Failed to post CreateModelEvent: %s", e)
-
-def start_periodic_model_trigger(interval_minutes: int = 30, run_immediate: bool = True):
-    def loop():
-        if run_immediate:
-            _post_create_model_event()
-        while True:
-            time.sleep(interval_minutes * 60)
-            _post_create_model_event()
-    t = threading.Thread(target=loop, daemon=True)
-    t.start()
-    return t
 
 class Trigger(ABC):
     """

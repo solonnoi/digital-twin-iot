@@ -63,3 +63,32 @@ class ExampleEventFabric(BaseEventFabric):
     def call(self, *args, **kwargs):
         logger.info("Called to event fabric")
         return "GenEvent", None
+
+class TrainOccupancyModelEventFabric(BaseEventFabric):
+
+    def __init__(self):
+        super(TrainOccupancyModelEventFabric, self).__init__()
+
+    def call(self, *args, **kwargs):
+        logger.info("Called to TrainOccupancyModelEventFabric")
+        return "TrainOccupancyModelEvent", None
+    
+    
+class CheckEmergencyEventFabric(BaseEventFabric):
+
+    def __init__(self):
+        super(CheckEmergencyEventFabric, self).__init__()
+
+    def call(self, *args, **kwargs):
+        logger.info("Called to CheckEmergencyEventFabric")
+        return "CheckEmergencyEvent", None
+    
+    
+class EmergencyEventFabric(BaseEventFabric):
+
+    def __init__(self):
+        super(EmergencyEventFabric, self).__init__()
+
+    def call(self, *args, **kwargs):
+        logger.info("Called to EmergencyEventFabric")
+        return "EmergencyEvent", None

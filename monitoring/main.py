@@ -1,7 +1,10 @@
-from sifec_base import LocalGateway, base_logger, PeriodicTrigger, ExampleEventFabric
+from sifec_base.trigger import OneShotTrigger
+from sifec_base import LocalGateway, base_logger, PeriodicTrigger, ExampleEventFabric, TrainOccupancyModelEventFabric,CheckEmergencyEventFabric,EmergencyEventFabric
 
 
 app = LocalGateway(mock=False)
+
+# Add in a vacation mode. 
 
 
 async def demo():
@@ -41,16 +44,30 @@ async def class_test_handler():
 app.deploy(class_test_handler, "class-test-handler-monitoring", "ClassTestEvent")
 
 
-@app.on_event("startup")
-def _start_triggers():
-    start_periodic_model_trigger(interval_minutes=30, run_immediate=True)
+async def emergency_handler():
+    """
+    This one just handles emergency checks periodically
+    """
+    # Logic to check for emergencies would go here
+    #If emergency detected send EmergencyEvent
+    evt3 = EmergencyEventFabric()
+    tgr3 = OneShotTrigger(evt3, runImmediate=False)
+    
+    base_logger.info("This is an emergency")
+    return {"status": 200, "message": "Emergency detected."}
 
 
+app.deploy(emergency_handler, "emergency_handler()", "CheckEmergencyEvent")
 
-# evt = ExampleEventFabric()
-# tgr = PeriodicTrigger(evt, runImmediate=True)
+
+evt = TrainOccupancyModelEventFabric()
+tgr = PeriodicTrigger(evt, runImmediate=True, cronSpec="*/1 * * * *")
+
+evt2 = CheckEmergencyEventFabric()
+tgr2 = PeriodicTrigger(evt2, runImmediate=True, cronSpec="*/1 * * * *")
 
 # This should trigger every 30 minutes and sends an event to create the occupancy model
 # To the modeling component...
-evt2 =_start_triggers()
-tgr2 = PeriodicTrigger(evt2, runImmediate=True, cronSpec="*/30 * * * *")
+
+
+

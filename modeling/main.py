@@ -150,7 +150,7 @@ from(bucket: "{bucket}")
 
 
 # Expose it as a SIF function / HTTP endpoint
-app.deploy(create_model_from_influx, "create_model_from_influx", "CreateModelEvent")
+app.deploy(create_model_from_influx, "create_model_from_influx()", "TrainOccupancyModelEvent")
 
 
 # evt = ExampleEventFabric()
@@ -161,4 +161,4 @@ evt = ModelEventFabric()
 
 # tgr = PeriodicTrigger(evt, runImmediate=True)
 # This is the "CreateOccupancyModelFunction"
-tgr2 = PeriodicTrigger(evt, runImmediate=True, cronSpec="*/30 * * * *")
+# tgr2 = PeriodicTrigger(evt, runImmediate=True, cronSpec="*/30 * * * *")
